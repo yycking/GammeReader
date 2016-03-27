@@ -21,9 +21,36 @@ class GammeReaderTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
+    func testDownload() {
+        let url = "https://m.gamme.com.tw/category/all"
+        let expectation = expectationWithDescription("GET \(url)")
+        let manager = DownloadManager(url: url) { (data) in
+            expectation.fulfill()
+            XCTAssertNotNil(data, "DownloadManager Success")
+        }
+        manager.fail = {
+            XCTFail("DownloadManager fail")
+        }
+        manager.connect()
+        
+        waitForExpectationsWithTimeout(10, handler:nil)
+    }
+    
+    func testParser() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
+        
+        
+        let url = "https://m.gamme.com.tw/category/all"
+        let expectation = expectationWithDescription("GET \(url)")
+        
+        let vc = ViewController()
+        vc.downloadHTML("https://m.gamme.com.tw/category/all") { (data) in
+            expectation.fulfill()
+            XCTAssertTrue(data.count > 0, "parser is working")
+        }
+        
+        waitForExpectationsWithTimeout(10, handler:nil)
     }
     
     func testPerformanceExample() {

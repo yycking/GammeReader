@@ -1,0 +1,13 @@
+PODS:
+  - Fuzi (0.3.0)
+  - SwiftGifOrigin (1.5.3)
+
+DEPENDENCIES:
+  - Fuzi (~> 0.3.0)
+  - SwiftGifOrigin (~> 1.5.3)
+
+SPEC CHECKSUMS:
+  Fuzi: 4725b8743f0a92100108e013347bf32ca80d93a1
+  SwiftGifOrigin: 893ebcceabe215a00b607328b5322b4e228347e5
+
+COCOAPODS: 0.39.0

@@ -16,8 +16,10 @@ class PageCell: UITableViewCell {
     init(reuseIdentifier: String?) {
         super.init(style: UITableViewCellStyle.Subtitle, reuseIdentifier: reuseIdentifier)
         
-        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-        self.textLabel?.addSubview(blurEffectView)
+        //blurEffectView.alpha = 0.5
+        blurEffectView.layer.zPosition = (self.textLabel?.layer.zPosition)! - CGFloat(0.1)
+        self.contentView.addSubview(blurEffectView)
+        
         self.textLabel?.font = self.textLabel?.font.fontWithSize(18)
         self.textLabel?.numberOfLines = 0
         self.textLabel?.textColor = UIColor.whiteColor()
@@ -42,6 +44,8 @@ class PageCell: UITableViewCell {
         frame.origin.y = self.bounds.height - frame.size.height
         frame.size.width = self.bounds.width - frame.origin.x*2
         self.textLabel?.frame = frame
+        
+        blurEffectView.frame = frame
     }
     
     // MARK: - PageCell

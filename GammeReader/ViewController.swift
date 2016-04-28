@@ -25,6 +25,12 @@ class ViewController: UITableViewController {
         self.tableView.pagingEnabled = true
         self.tableView.showsVerticalScrollIndicator = false
         self.tableView.separatorStyle = .None
+        
+        if self.refreshControl == nil {
+            self.refreshControl = UIRefreshControl()
+            self.refreshControl!.addTarget(self, action: #selector(ViewController.refresh), forControlEvents: UIControlEvents.ValueChanged)
+        }
+        self.refreshControl!.beginRefreshing()
     }
 
     override func didReceiveMemoryWarning() {
@@ -52,6 +58,15 @@ class ViewController: UITableViewController {
     }
     
     // MARK: - ViewController
+    
+    // renew tableview
+    func refresh() {
+        data = [[
+            "type":"load",
+            "link":"https://m.gamme.com.tw/category/all"
+            ]]
+        self.tableView.reloadData()
+    }
     
     // download html file and parser to data type of table array
     func downloadHTML(url: String, action: [[String:String]]->()) {
@@ -148,6 +163,7 @@ class ViewController: UITableViewController {
                 })
                 
                 data[indexPath.row]["link"] = nil
+                self.refreshControl!.endRefreshing()
             }
         } else {
             let cell = cell as! PageCell

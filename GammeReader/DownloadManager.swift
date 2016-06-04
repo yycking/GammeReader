@@ -26,28 +26,33 @@ class DownloadManager {
                 // success and error handling
                 if let data = data {
                     self.action(data)
-                } else if let error = error {
+                    return
+                }
+                
+                var delaySecond: Double = 1.0
+                if let error = error {
                     // check if error is transient or final and throw right error
                     if let delay = error.userInfo["ErrorRetryDelayKey"] as? Double {
                         // request failed and can be retry later
-                        self.reconnect(delay)
-                    } else {
-                        // request failed for other reason
-                        self.reconnect()
+                        delaySecond = delay
                     }
-                } else {
-                    // no data received scenario
-                    self.reconnect()
                 }
+                self.reconnect(delaySecond)
             }
             
             sessionURLTask.resume()
         }
     }
     
-    func reconnect(delay: Double = 1) {
+    func reconnect(delay: Double) {
         if self.retry > 0 {
-            NSTimer.scheduledTimerWithTimeInterval(delay, target: self, selector: #selector(DownloadManager.connect), userInfo: nil, repeats: false)
+            let delayTime = dispatch_time(
+                DISPATCH_TIME_NOW,
+                Int64(delay * Double(NSEC_PER_SEC))
+            )
+            dispatch_after(delayTime, dispatch_get_main_queue()) {
+                self.connect()
+            }
 
             self.retry = self.retry-1
         }else if let next = fail {
